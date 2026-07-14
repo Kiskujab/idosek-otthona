@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Idősotthon-kereső — jelentés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F7F4; --surface:#FFFFFF; --ink:#1B211F; --muted:#636D68;
+    --line:#E6E6DF; --line-strong:#D6D6CD;
+    --accent:#2E6B5E; --accent-ink:#1F4A41; --accent-soft:#E9F1EE;
+    --warn:#9A5A1C; --warn-soft:#F6ECDF;
+    --danger:#9B2C2C; --danger-soft:#F5E5E5;
+    --neutral-soft:#EDEDE8; --neutral-ink:#4A524E;
+    --radius:16px; --radius-sm:10px;
+    --shadow:0 1px 2px rgba(27,33,31,.04),0 8px 24px rgba(27,33,31,.05);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  a{color:var(--accent-ink)}
+
+  /* ---------- Header ---------- */
+  header.top{padding:56px 0 8px}
+  .eyebrow{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{
+    font-family:"Fraunces",Georgia,serif;font-weight:500;
+    font-size:clamp(32px,6vw,50px);line-height:1.05;letter-spacing:-.01em;margin:0 0 16px;
+  }
+  .lede{font-size:clamp(16px,2.4vw,19px);color:var(--muted);max-width:60ch;margin:0}
+  .meta-line{margin-top:18px;font-size:13.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px}
+  .meta-line span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block}
+
+  /* ---------- Thesis callout ---------- */
+  .thesis{
+    margin:34px 0 8px;background:var(--surface);border:1px solid var(--line);
+    border-left:4px solid var(--accent);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);
+  }
+  .thesis .k{font-family:"Fraunces",serif;font-size:19px;color:var(--accent-ink);margin:0 0 8px;font-weight:600}
+  .thesis p{margin:0 0 10px}
+  .thesis p:last-child{margin-bottom:0}
+  .thesis strong{color:var(--ink)}
+
+  /* ---------- Section ---------- */
+  section{padding:44px 0 4px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin:0 0 6px}
+  .sec-num{font-family:"Fraunces",serif;font-size:15px;color:var(--accent);font-weight:600;min-width:26px}
+  h2{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(23px,3.6vw,30px);letter-spacing:-.01em;margin:0}
+  .sec-sub{color:var(--muted);font-size:14.5px;margin:6px 0 22px;padding-left:40px}
+  @media(max-width:560px){.sec-sub{padding-left:0}}
+
+  /* ---------- Legend ---------- */
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 0}
+  .legend .badge{cursor:default}
+
+  /* ---------- Badges ---------- */
+  .badges{display:flex;flex-wrap:wrap;gap:7px;margin:0}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;
+    letter-spacing:.01em;padding:4px 10px;border-radius:100px;line-height:1.3;white-space:nowrap;
+  }
+  .badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.85}
+  .b-go{background:var(--accent-soft);color:var(--accent-ink)}
+  .b-dem{background:#fff;color:var(--accent-ink);box-shadow:inset 0 0 0 1px var(--accent)}
+  .b-dem::before{background:var(--accent)}
+  .b-wait{background:var(--danger-soft);color:var(--danger)}
+  .b-warn{background:var(--warn-soft);color:var(--warn)}
+  .b-type{background:var(--neutral-soft);color:var(--neutral-ink)}
+  .b-type::before{opacity:.55}
+
+  /* ---------- TOP cards ---------- */
+  .top-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:820px){.top-grid{grid-template-columns:1fr}}
+  .top-card{
+    position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 20px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  }
+  .rank{font-family:"Fraunces",serif;font-size:40px;line-height:1;color:var(--accent);font-weight:600;margin:0 0 10px}
+  .top-card h3{font-size:18px;font-weight:700;margin:0 0 4px;letter-spacing:-.01em}
+  .place{font-size:13.5px;color:var(--muted);margin:0 0 14px}
+  .top-card .badges{margin-bottom:14px}
+  .why{font-size:14px;color:var(--ink);margin:0 0 16px;flex:1}
+  .price-row{font-size:13px;color:var(--muted);margin:0 0 16px;padding-top:14px;border-top:1px dashed var(--line-strong)}
+  .price-row b{color:var(--ink);font-weight:600}
+
+  /* ---------- Call button ---------- */
+  .call{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:14px;
+    padding:11px 16px;border-radius:var(--radius-sm);transition:background .15s ease;width:100%;
+  }
+  .call:hover{background:var(--accent-ink)}
+  .call svg{width:15px;height:15px;flex:none}
+
+  /* ---------- Emergency strip ---------- */
+  .emergency{
+    margin-top:16px;background:var(--accent-ink);color:#EAF3F0;border-radius:var(--radius);
+    padding:20px 24px;display:flex;gap:16px;align-items:flex-start;box-shadow:var(--shadow);
+  }
+  .emergency .bolt{font-size:22px;line-height:1.2}
+  .emergency h3{margin:0 0 6px;font-size:16px;color:#fff;font-weight:700}
+  .emergency p{margin:0;font-size:14px;color:#CFE3DD}
+  .emergency b{color:#fff}
+
+  /* ---------- Home card grid ---------- */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 18px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  }
+  .card.star{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),var(--shadow)}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin:0 0 3px}
+  .card h3{font-size:16.5px;font-weight:700;margin:0;letter-spacing:-.01em}
+  .startag{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.05em;white-space:nowrap;padding-top:3px}
+  .card .place{margin:0 0 12px}
+  .card .badges{margin:0 0 13px}
+  .kv{font-size:13.5px;color:var(--muted);margin:0 0 4px;display:flex;gap:8px}
+  .kv b{color:var(--ink);font-weight:600;min-width:52px;flex:none}
+  .note{font-size:13.5px;color:var(--muted);margin:12px 0 14px;flex:1;line-height:1.55}
+  .note.reason{color:var(--ink)}
+  .note .flag{color:var(--warn);font-weight:600}
+  .note .flag.hard{color:var(--danger)}
+  .card .call{width:auto;align-self:flex-start;padding:9px 14px}
+  .noweb{font-size:13px;color:var(--muted);font-style:italic;margin:0}
+
+  /* ---------- Price table ---------- */
+  .price-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  .price-table th,.price-table td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14.5px;vertical-align:top}
+  .price-table th{background:var(--accent-soft);color:var(--accent-ink);font-weight:600;font-size:13px;letter-spacing:.02em}
+  .price-table td:first-child{font-weight:600;color:var(--ink);width:38%}
+  .price-table tr:last-child td{border-bottom:none}
+  .refs{margin:16px 0 0;font-size:13.5px;color:var(--muted)}
+
+  /* ---------- Recommendations ---------- */
+  .rec{counter-reset:r;list-style:none;padding:0;margin:8px 0 0;display:grid;gap:12px}
+  .rec li{
+    counter-increment:r;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:16px 18px 16px 56px;position:relative;font-size:14.5px;box-shadow:var(--shadow);
+  }
+  .rec li::before{
+    content:counter(r);position:absolute;left:16px;top:15px;
+    width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);
+    font-family:"Fraunces",serif;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;
+  }
+  .rec li b{color:var(--ink)}
+  .rec li.minor::before{background:var(--warn-soft);color:var(--warn)}
+
+  /* ---------- Footer ---------- */
+  footer{margin:52px 0 60px;padding-top:26px;border-top:1px solid var(--line-strong)}
+  .offer{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);font-size:14.5px}
+  .offer h3{margin:0 0 8px;font-family:"Fraunces",serif;font-size:18px;font-weight:600}
+  .disclaimer{margin:18px 0 0;font-size:12.5px;color:var(--muted);line-height:1.6}
+
+  @media (prefers-reduced-motion:no-preference){
+    .top-card,.card,.thesis,.emergency,.rec li{animation:rise .5s cubic-bezier(.2,.7,.3,1) both}
+    @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  }
+  a:focus-visible,.call:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <p class="eyebrow">Idősotthon-kereső · jelentés</p>
+    <h1>Azonnali beköltözés, demens férfi ellátással</h1>
+    <p class="lede">Két körzet átvizsgálva: Győr 50 km-es vonzáskörzete és Budapest XVI. kerület 50 km-es köre. Minden találat árral, státusszal és tapintható telefonszámmal.</p>
+    <div class="meta-line">
+      <span><i class="dot"></i>Győr + 50 km</span>
+      <span><i class="dot"></i>Budapest XVI. + 50 km</span>
+      <span><i class="dot"></i>Frissítve: 2026. július 14.</span>
+    </div>
+  </header>
+
+  <div class="thesis">
+    <p class="k">A főszempont eldönti az egészet</p>
+    <p>Az <strong>azonnali beköltözés</strong> gyakorlatilag kizárja az állami/önkormányzati otthonokat — ott országosan <strong>2–5 év a várólista</strong> (kb. 30 ezer ember vár ~54 ezer férőhelyre). Reális irány tehát három van: <strong>magán</strong>, <strong>egyházi</strong>, és a leggyorsabb vészmegoldásként az <strong>átmeneti gondozóház</strong>.</p>
+    <p>Amit nem tudok megnézni: hogy egy adott helyen <strong>ma</strong> van-e üres ágy — ez hetente változik, csak telefonon derül ki. Amit jelzek: melyik hely szerkezetileg képes gyors felvételre, és hol van <strong>zárt demens részleg</strong> (elkóborlásra hajlamos demens férfinál ez kulcskérdés minden hívásnál).</p>
+  </div>
+
+  <div class="legend">
+    <span class="badge b-go">Gyors / azonnali</span>
+    <span class="badge b-dem">Demens részleg</span>
+    <span class="badge b-wait">Várólista</span>
+    <span class="badge b-warn">Vegyes értékelés</span>
+    <span class="badge b-type">Fenntartó típusa</span>
+  </div>
+
+  <!-- ===================== TOP 3 ===================== -->
+  <section id="top">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Top 3 ajánlásom</h2></div>
+    <p class="sec-sub">Mindkét körzetből, az „azonnali + demens férfi” szempontra optimalizálva.</p>
+
+    <div class="top-grid">
+      <div class="top-card">
+        <div class="rank">1</div>
+        <h3>Blue Danube Nursing Home</h3>
+        <p class="place">Sződliget, Duna-part 2 · ~30 km a XVI-tól</p>
+        <div class="badges">
+          <span class="badge b-go">Azonnali valószínű</span>
+          <span class="badge b-dem">Demens részleg</span>
+          <span class="badge b-type">Magán</span>
+        </div>
+        <p class="why">Saját demens részleg („Katica” — értékelésben konkrétan demens beteg ellátásáról írnak). Uszoda, gyógytorna, portaszolgálat. Magán → gyors felvétel.</p>
+        <p class="price-row"><b>Ár:</b> egyedi, magán kategória — jellemzően ~350–550 e Ft/hó, belépési előfordulhat.</p>
+        <a class="call" href="tel:+3627590000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+36 27 590 000</a>
+      </div>
+
+      <div class="top-card">
+        <div class="rank">2</div>
+        <h3>Abigél Idősek Panziója</h3>
+        <p class="place">Tét, Fő u. 129 · ~35 km Győrtől</p>
+        <div class="badges">
+          <span class="badge b-go">Azonnali valószínű</span>
+          <span class="badge b-dem">Demens: rákérdezni</span>
+          <span class="badge b-type">Magán</span>
+        </div>
+        <p class="why">A Győr-oldal legerősebb magán opciója. Panzió jellegű → jellemzően rövid felvétel. Kiugróan jó, személyes hangú értékelések.</p>
+        <p class="price-row"><b>Ár:</b> egyedi, panzió kategória — jellemzően ~250–400 e Ft/hó.</p>
+        <a class="call" href="tel:+36203863701"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+36 20 386 3701</a>
+      </div>
+
+      <div class="top-card">
+        <div class="rank">3</div>
+        <h3>Abigail Nursing Home</h3>
+        <p class="place">Dány, Szabadság út 79 · ~35 km a XVI-tól</p>
+        <div class="badges">
+          <span class="badge b-go">Azonnali valószínű</span>
+          <span class="badge b-dem">Demens</span>
+          <span class="badge b-type">Magán</span>
+        </div>
+        <p class="why">Kifejezetten demens ellátás (az értékelések is ezt emelik ki). Tiszta, gondos, 4,6★. ~25 km Gödöllőtől.</p>
+        <p class="price-row"><b>Ár:</b> egyedi, magán kategória.</p>
+        <a class="call" href="tel:+36703693613"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+36 70 369 3613</a>
+      </div>
+    </div>
+
+    <div class="emergency">
+      <div class="bolt">⚡</div>
+      <div>
+        <h3>Leggyorsabb vészmegoldás Győrben</h3>
+        <p>Ha napokon belül kell hely, a győri <b>átmeneti gondozóházak</b> (Lepke u. / Répce u.) pont erre valók: bridging jelleggel gyorsan felvesznek, olcsók (a díj a nyugdíj arányában), onnan lehet tartós helyet keresni. Hátrány: átmeneti (jellemzően max ~1 év), nem feltétlen zárt demens részleg.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GYŐR ===================== -->
+  <section id="gyor">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Teljes lista — Győr + 50 km</h2></div>
+
+    <div class="grid">
+      <div class="card star">
+        <div class="card-top"><h3>Abigél Idősek Panziója</h3><span class="startag">★ TOP 2</span></div>
+        <p class="place">Tét · ~35 km</p>
+        <div class="badges"><span class="badge b-go">Azonnali valószínű</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi (~250–400 e/hó)</span></p>
+        <p class="note">Kiváló értékelések, családias. A Győr-oldal első számú tippje.</p>
+        <a class="call" href="tel:+36203863701">Hívás · +36 20 386 3701</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Lepke u. Átmeneti Gondozóház</h3></div>
+        <p class="place">Győr, Lepke u. 37</p>
+        <div class="badges"><span class="badge b-go">Gyors · átmeneti</span><span class="badge b-type">Önkormányzati</span></div>
+        <p class="kv"><b>Ár</b><span>nyugdíj arányában (olcsó)</span></p>
+        <p class="note">Gyors kapu, bridging megoldás. A konyhára érkezett panasz az értékelésekben.</p>
+        <a class="call" href="tel:+3696517061">Hívás · +36 96 517 061</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Répce u. Átmeneti Gondozóház</h3></div>
+        <p class="place">Győr, Répce u. 8/b</p>
+        <div class="badges"><span class="badge b-go">Gyors · átmeneti</span><span class="badge b-type">Önkormányzati</span></div>
+        <p class="kv"><b>Ár</b><span>nyugdíj arányában</span></p>
+        <p class="note">Ugyanaz a logika, mint a Lepke u. — áthidaló elhelyezés, amíg tartós hely lesz.</p>
+        <a class="call" href="tel:+3696413240">Hívás · +36 96 413 240</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Katalin Otthon és Gondozóház</h3></div>
+        <p class="place">Dör (Csorna mellett) · ~30 km</p>
+        <div class="badges"><span class="badge b-go">Felvétel valószínű</span><span class="badge b-warn">Vegyes értékelés</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi</span></p>
+        <p class="note"><span class="flag">Van komoly panasz</span> a kommunikációra/ellátásra. Csak személyes látogatás után.</p>
+        <a class="call" href="tel:+3696593353">Hívás · +36 96 593 353</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>EESZI Idősek Otthona</h3></div>
+        <p class="place">Győr, Cuha u. 30</p>
+        <div class="badges"><span class="badge b-wait">Várólista</span><span class="badge b-warn">Aggasztó értékelés</span><span class="badge b-type">Önkormányzati</span></div>
+        <p class="kv"><b>Ár</b><span>~nyugdíj 80%</span></p>
+        <p class="note"><span class="flag hard">Bánásmódra vonatkozó súlyos panasz</span> is szerepel. Olcsó, de várólista + óvatosan.</p>
+        <a class="call" href="tel:+36705939327">Hívás · +36 70 593 9327</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Szent Anna Otthon / Öveges J. u.</h3></div>
+        <p class="place">Győr, Winter Ernő u. 1 / Öveges 7</p>
+        <div class="badges"><span class="badge b-go">Rövidebb felvétel</span><span class="badge b-type">Egyházi (kat.)</span></div>
+        <p class="kv"><b>Ár</b><span>egyházi (nyugdíj %-a)</span></p>
+        <p class="note">Egyházi otthonoknál gyorsabb a bekerülés az államinál. Vegyes vélemények.</p>
+        <a class="call" href="tel:+3696440540">Hívás · +36 96 440 540</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Mosonmagyaróvári ESZI</h3></div>
+        <p class="place">Mosonmagyaróvár · ~40 km</p>
+        <div class="badges"><span class="badge b-wait">Várólista</span><span class="badge b-type">Önkormányzati</span></div>
+        <p class="kv"><b>Ár</b><span>~nyugdíj %-a</span></p>
+        <p class="note">Jó értékelés (4,6★), de állami → várólista. Tartós helynek felíratni.</p>
+        <a class="call" href="tel:+3696566260">Hívás · +36 96 566 260</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BUDAPEST ===================== -->
+  <section id="budapest">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Teljes lista — Budapest XVI. + 50 km</h2></div>
+    <p class="sec-sub">Az 50 km-es kör lefedi az egész fővárost és Pest megye nagy részét — Gödöllő, Vác, Dunaharaszti, Dány mind belefér.</p>
+
+    <div class="grid">
+      <div class="card star">
+        <div class="card-top"><h3>Blue Danube Nursing Home</h3><span class="startag">★ TOP 1</span></div>
+        <p class="place">Sződliget · ~30 km</p>
+        <div class="badges"><span class="badge b-go">Azonnali valószínű</span><span class="badge b-dem">Demens részleg</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi (~350–550 e/hó)</span></p>
+        <p class="note">Uszoda, gyógytorna, portaszolgálat. Saját „Katica” demens részleg.</p>
+        <a class="call" href="tel:+3627590000">Hívás · +36 27 590 000</a>
+      </div>
+
+      <div class="card star">
+        <div class="card-top"><h3>Abigail Nursing Home</h3><span class="startag">★ TOP 3</span></div>
+        <p class="place">Dány · ~35 km</p>
+        <div class="badges"><span class="badge b-go">Azonnali valószínű</span><span class="badge b-dem">Demens</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi</span></p>
+        <p class="note">4,6★, gondos, tiszta. Kifejezetten demens ellátás.</p>
+        <a class="call" href="tel:+36703693613">Hívás · +36 70 369 3613</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Orchidea Gondozó Otthon</h3></div>
+        <p class="place">Dunaharaszti · ~25 km</p>
+        <div class="badges"><span class="badge b-go">Azonnali valószínű</span><span class="badge b-dem">Demens</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi</span></p>
+        <p class="note">Nagyon jó demens-értékelések, nagy kert. Erős alternatíva enyhe és súlyos demensre is.</p>
+        <a class="call" href="tel:+36305296067">Hívás · +36 30 529 6067</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Margita Idősek Otthona</h3></div>
+        <p class="place">Szada · ~28 km</p>
+        <div class="badges"><span class="badge b-go">Felvétel valószínű</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi</span></p>
+        <p class="note">Kevés online adat/értékelés, de magán → érdemes felhívni és rákérdezni a demens részlegre.</p>
+        <a class="call" href="tel:+3628503355">Hívás · +36 28 503 355</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Gaudiopolis Evangélikus Szeretetház</h3></div>
+        <p class="place">Budapest III. ker. · ~22 km</p>
+        <div class="badges"><span class="badge b-go">Rövid felvétel</span><span class="badge b-dem">Demens részleg</span><span class="badge b-type">Egyházi</span></div>
+        <p class="kv"><b>Ár</b><span>demens ~11 700 Ft/nap ≈ 351 e/hó + belépési 2,5–5 M Ft</span></p>
+        <p class="note">Átlátható, nyilvános ár. Belépési díj van. Weboldal: gaudiopolis.hu</p>
+        <p class="noweb">Kapcsolat a weboldalon keresztül.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Golden Cross Nursing Home</h3></div>
+        <p class="place">Budapest X., Jászberényi út 82</p>
+        <div class="badges"><span class="badge b-go">Felvétel valószínű</span><span class="badge b-dem">Demens</span><span class="badge b-warn">Vegyes értékelés</span><span class="badge b-type">Magán + pszichiátria</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi</span></p>
+        <p class="note">Demens + pszichiátria profil, ez demens férfinál előny lehet. <span class="flag">Személyzethiány-panasz</span> az értékelésekben.</p>
+        <a class="call" href="tel:+36205898204">Hívás · +36 20 589 8204</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Olajág Otthonok</h3></div>
+        <p class="place">Bp — Zugló, Csepel, Józsefváros, Újpalota</p>
+        <div class="badges"><span class="badge b-go">Rövid felvétel</span><span class="badge b-type">Magán · prémium</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi, prémium</span></p>
+        <p class="note">Inkább önellátóbbaknak; 80 év fölött állapotfelmérés kell. Súlyos demensre külön rá kell kérdezni.</p>
+        <a class="call" href="tel:+3615550600">Hívás · +36 1 555 0600</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>SENECTUS</h3></div>
+        <p class="place">Budapest II., Hideg u. 3</p>
+        <div class="badges"><span class="badge b-go">Rövid felvétel</span><span class="badge b-warn">Vegyes értékelés</span><span class="badge b-type">Magán · prémium</span></div>
+        <p class="kv"><b>Ár</b><span>prémium, egyedi</span></p>
+        <p class="note">Dicsérő és <span class="flag">nagyon kritikus</span> vélemények is. Csak alapos, személyes látogatás után.</p>
+        <a class="call" href="tel:+3613972990">Hívás · +36 1 397 2990</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Normafa Idősek Otthona</h3></div>
+        <p class="place">Budapest XII. · ~20 km</p>
+        <div class="badges"><span class="badge b-go">Rövid felvétel</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi</span></p>
+        <p class="note">Nincs belépési díj, de részleges önellátást elvárnak → súlyos demensnél kérdéses. Weboldal: normafaidosekotthon.hu</p>
+        <p class="noweb">Kapcsolat a weboldalon keresztül.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Napsugár Idősek Otthona</h3></div>
+        <p class="place">Budapest XII., Magasúti köz 3</p>
+        <div class="badges"><span class="badge b-go">Akár azonnali</span><span class="badge b-warn">Aggasztó értékelés</span><span class="badge b-type">Magán</span></div>
+        <p class="kv"><b>Ár</b><span>egyedi</span></p>
+        <p class="note">Gyors felvétel, DE <span class="flag hard">komolyan aggasztó, elhanyagolást állító</span> értékelések is. Óvatosan, csak alapos látogatás után.</p>
+        <a class="call" href="tel:+36304640127">Hívás · +36 30 464 0127</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FELTÉTELES ===================== -->
+  <section id="feltetel">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Feltételes / bizonytalan találatok</h2></div>
+    <p class="sec-sub">Ezek nem estek ki, csak van egy „de” — a badge és a szöveg mutatja, miért kerültek ide.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-top"><h3>Fővárosi Önk. Gödöllői Idősek Otthona</h3></div>
+        <p class="place">Gödöllő, Dózsa Gy. út 65</p>
+        <div class="badges"><span class="badge b-wait">Várólista</span><span class="badge b-dem">Kiváló demens-ellátás</span><span class="badge b-type">Önkormányzati</span></div>
+        <p class="note reason"><b>Miért itt:</b> állami → valószínűleg nem azonnali. <b>Viszont</b> több értékelő a demens édesapja biztonságos, kulturált elhelyezését dicséri (4,7★). Ha az idő nem sürget, tartós helynek az egyik legjobb — érdemes felíratni a listára.</p>
+        <a class="call" href="tel:+3628410364">Hívás · +36 28 410 364</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Dénesmajori Otthonok</h3></div>
+        <p class="place">Pereszteg · ~55 km Győrtől</p>
+        <div class="badges"><span class="badge b-warn">Épp túl 50 km-en</span><span class="badge b-type">Egészségügyi / ápolás</span></div>
+        <p class="note reason"><b>Miért itt:</b> ~55 km Győrtől, kicsit túl az 50-en (Sopronhoz közelebb). Jó értékelés (4,8★), 24 órás ápolási profil. Ha pár km-t engedsz a határon, komoly opció.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Gondozóház és Idősek Otthona</h3></div>
+        <p class="place">Gödöllő, Ady Endre stny. 56</p>
+        <div class="badges"><span class="badge b-warn">Higiéniai panasz</span><span class="badge b-type">Vegyes fenntartó</span></div>
+        <p class="note reason"><b>Miért itt:</b> az ellátás rendben lehet, de <span class="flag hard">egy nagyon részletes, súlyos higiéniai panasz</span> rontja a képet (4,2★, van jó vélemény is). Kizárólag személyes látogatás + szerződés-átnézés után.</p>
+        <a class="call" href="tel:+3628512376">Hívás · +36 28 512 376</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Pesti úti Idősek Otthona</h3></div>
+        <p class="place">Budapest XVII.</p>
+        <div class="badges"><span class="badge b-wait">Várólista</span><span class="badge b-warn">Súlyos panaszok</span><span class="badge b-type">Önkormányzati</span></div>
+        <p class="note reason"><b>Miért itt:</b> önkormányzati → várólista, nem azonnali. Nagy intézmény (3,9★), van köztük <span class="flag hard">nagyon súlyos panasz</span> is. Csak tartalék opciónak, alapos ellenőrzéssel.</p>
+        <a class="call" href="tel:+3612540052">Hívás · +36 1 254 0052</a>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Napsugár · SENECTUS · Golden Cross</h3></div>
+        <p class="place">Budapest (XII. / II. / X.)</p>
+        <div class="badges"><span class="badge b-go">Gyors felvétel</span><span class="badge b-warn">Vegyes–aggasztó</span></div>
+        <p class="note reason"><b>Miért itt:</b> mind szerkezetileg gyors felvételre képes, DE mind kapott komoly kritikát. Ha ide mennél, kötelező a <b>bejelentés nélküli, személyes látogatás</b>, és beszélj ott lakók hozzátartozóival.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ÁRAK ===================== -->
+  <section id="arak">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Árszintek — 2025–2026 benchmark</h2></div>
+    <p class="sec-sub">Ahol „egyedi ár” szerepel, ezekhez viszonyíts.</p>
+
+    <table class="price-table">
+      <tr><th>Tétel</th><th>Jellemző összeg</th></tr>
+      <tr><td>Napi térítési díj</td><td>8 000–17 000 Ft/nap (~240–510 e Ft/hó); prémium/apartman 20 000+ Ft/nap (600 e Ft/hó felett)</td></tr>
+      <tr><td>Demens részleg</td><td>Felár szokott lenni (pl. Gaudiopolis: demens ~11 700 Ft/nap)</td></tr>
+      <tr><td>Belépési hozzájárulás (egyszeri)</td><td>Magán/egyházi helyeken 1,5 M – 8 M Ft, szoba komfortjától függően; gyakran visszatérítési garanciával</td></tr>
+      <tr><td>Állami / önkormányzati</td><td>Nincs belépési díj; a személyi térítési díj max. a nyugdíj 80%-a — DE 2–5 év várólista</td></tr>
+    </table>
+    <p class="refs"><b>Referenciaárak viszonyításnak</b> (nem a te körzeted): Aranykor (Ballószög) 14 000 Ft/nap ≈ 420 e/hó · Csobánka 10 990 Ft/nap ≈ 330 e/hó + 4–8 M belépési · Platán (Üröm) 14 400–33 000 Ft/nap.</p>
+  </section>
+
+  <!-- ===================== AJÁNLÁSOK ===================== -->
+  <section id="ajanlas">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Ajánlásaim — mit tegyél most</h2></div>
+
+    <ol class="rec">
+      <li><b>Két sávon indulj el párhuzamosan.</b> (a) A TOP 3 magánhelyet hívd fel <b>ma</b> — kérdezd: van-e üres férőhely demens férfinak, van-e <b>zárt demens részleg</b>. (b) Ezzel egy időben az <b>átmeneti gondozóházat</b> is aktiváld, mert az áthidalja, ha a magánhelynél 1–2 hét a felvétel.</li>
+      <li><b>Ne dőlj be a „felveszünk demenst” mondatnak.</b> Rá kell kérdezni: <i>súlyos</i> demenst is? Elkóborlásnál van <i>zárt</i> részleg? Éjszaka hány ápoló felügyel? Ez választja szét a valóban alkalmas helyeket.</li>
+      <li><b>Menj be személyesen, bejelentés nélküli időpontban.</b> A legnagyobb szórás pont az ápolás minőségében van. A szag, a lakók ápoltsága, a személyzet hangneme többet mond, mint bármelyik weboldal.</li>
+      <li><b>Kérj mindent írásban:</b> napidíj + belépési díj + mit tartalmaz (gyógyszer? pelenka? gyógytorna?), és a felmondás/visszatérítés feltételeit.</li>
+      <li class="minor"><b>Kiskorúként fontos:</b> a szerződést és a fizetést szülőn / családi vállalkozáson keresztül kell futtatni — de a keresést, hívásokat, összehasonlítást nyugodtan vidd te.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <div class="offer">
+      <h3>Ha szűkíted egy körzetre</h3>
+      <p>Csak Győr, vagy csak Budapest-környék — csinálok belőle térképet a pontos helyekkel és útvonalakkal, illetve megírom a telefonos/e-mailes érdeklődő szöveget, amit egyszerre több helyre kiküldhettek.</p>
+    </div>
+    <p class="disclaimer">A konkrét, aznapi szabad férőhely egyik helyen sem igazolható előzetesen — ez hetente változik, és csak telefonon derül ki; ezért minden „azonnali” jelzés a hely szerkezeti képességére utal, nem garantált üres ágyra. Az adatok nyilvános forrásokból (Google Places-találatok, 2025-ös díjszabási cikkek) és felhasználói értékelésekből származnak; az értékelésekben szereplő panaszok egyedi, nem ellenőrzött vélemények. Beköltözés előtt minden esetben ellenőrizd személyesen az intézményt és a szerződést.</p>
+  </footer>
+
+</div>
+</body>
+</html>
